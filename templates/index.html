@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Início | Gestão de Registros{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">ORGANIZAÇÃO COMUNITÁRIA</p>
+    <h1>Informações organizadas.<br><span>Rotina mais simples.</span></h1>
+    <p class="hero-copy">Cadastre, consulte e mantenha os registros importantes em um só lugar.</p>
+    <div class="actions">
+      <a class="button button-primary" href="{{ url_for('novo_registro') }}">+ Cadastrar registro</a>
+      <a class="button button-secondary" href="{{ url_for('listar_registros') }}">Consultar registros</a>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="art-card art-card-back"></div>
+    <div class="art-card art-card-front"><span class="art-check">✓</span><strong>Registro organizado</strong><small>Informação fácil de encontrar</small><div class="art-lines"><i></i><i></i><i></i></div></div>
+    <span class="art-dot dot-one"></span><span class="art-dot dot-two"></span>
+  </div>
+</section>
+<section class="stats" aria-label="Resumo dos registros">
+  <article class="stat-card"><span class="stat-icon purple" aria-hidden="true">▤</span><div><p>Total de registros</p><strong>{{ total }}</strong></div></article>
+  <article class="stat-card"><span class="stat-icon green" aria-hidden="true">✓</span><div><p>Registros ativos</p><strong>{{ ativos }}</strong></div></article>
+  <article class="stat-card"><span class="stat-icon orange" aria-hidden="true">＋</span><div><p>Ação rápida</p><a href="{{ url_for('novo_registro') }}">Adicionar novo</a></div></article>
+</section>
+<section class="section-heading">
+  <div><p class="eyebrow">VISÃO GERAL</p><h2>Registros recentes</h2></div>
+  <a class="text-link" href="{{ url_for('listar_registros') }}">Ver todos <span aria-hidden="true">→</span></a>
+</section>
+{% if recentes %}
+  <div class="record-grid">
+  {% for registro in recentes %}
+    <article class="record-card">
+      <div class="record-card-top"><span class="category-dot" aria-hidden="true"></span><span class="pill">{{ registro["categoria"] }}</span></div>
+      <h3>{{ registro["titulo"] }}</h3>
+      <p>{{ registro["descricao"] or "Nenhuma descrição informada." }}</p>
+      <div class="record-card-bottom"><span class="status status-{{ registro['status']|lower }}">{{ registro["status"] }}</span><a href="{{ url_for('editar_registro', registro_id=registro['id']) }}">Editar</a></div>
+    </article>
+  {% endfor %}
+  </div>
+{% else %}
+  <section class="empty-state"><div class="empty-icon" aria-hidden="true">▤</div><h3>Nenhum registro por enquanto</h3><p>Comece adicionando o primeiro registro da organização.</p><a class="button button-primary" href="{{ url_for('novo_registro') }}">Cadastrar primeiro registro</a></section>
+{% endif %}
+{% endblock %}

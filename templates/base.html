@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="MVP para organizar registros de uma organização comunitária.">
+  <title>{% block title %}Gestão de Registros{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="{{ url_for('inicio') }}"><span class="brand-mark" aria-hidden="true">GR</span> Gestão de Registros</a>
+      <nav aria-label="Navegação principal">
+        <a href="{{ url_for('inicio') }}">Início</a>
+        <a href="{{ url_for('listar_registros') }}">Registros</a>
+        <a class="nav-cta" href="{{ url_for('novo_registro') }}">+ Novo registro</a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo" class="container main-content">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% if mensagens %}
+        <section class="flash-list" aria-label="Mensagens do sistema" aria-live="polite">
+          {% for categoria, mensagem in mensagens %}
+            <div class="alert alert-{{ categoria }}">
+              <span aria-hidden="true">{% if categoria == 'success' %}✓{% else %}!{% endif %}</span>
+              <span>{{ mensagem }}</span>
+            </div>
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <div class="container">MVP acadêmico · Gestão organizada, informação acessível.</div>
+  </footer>
+</body>
+</html>

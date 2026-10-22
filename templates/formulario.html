@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo_pagina }} | Gestão de Registros{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><a class="back-link" href="{{ url_for('listar_registros') }}">← Voltar para registros</a><p class="eyebrow">GESTÃO DE DADOS</p><h1>{{ titulo_pagina }}</h1><p class="muted">Preencha as informações abaixo. Os campos com * são obrigatórios.</p></div>
+</div>
+<form class="form-card" method="post" novalidate>
+  <div class="form-section-title"><span class="section-number">01</span><div><h2>Informações do registro</h2><p>Use informações claras para facilitar consultas futuras.</p></div></div>
+  <div class="field">
+    <label for="titulo">Título <span aria-hidden="true">*</span></label>
+    <input id="titulo" name="titulo" type="text" maxlength="120" required value="{{ valores.get('titulo', '') }}" placeholder="Ex.: Doação de materiais escolares" aria-describedby="titulo-help">
+    <small id="titulo-help">Até 120 caracteres.</small>
+  </div>
+  <div class="form-row">
+    <div class="field">
+      <label for="categoria">Categoria <span aria-hidden="true">*</span></label>
+      <select id="categoria" name="categoria" required>
+        <option value="">Selecione uma categoria</option>
+        {% for categoria in categorias %}
+        <option value="{{ categoria }}" {% if valores.get('categoria') == categoria %}selected{% endif %}>{{ categoria }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        {% for status in ['Ativo', 'Inativo'] %}
+        <option value="{{ status }}" {% if valores.get('status', 'Ativo') == status %}selected{% endif %}>{{ status }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <label for="descricao">Descrição</label>
+    <textarea id="descricao" name="descricao" rows="5" maxlength="1000" placeholder="Adicione detalhes que ajudem a identificar este registro...">{{ valores.get('descricao', '') }}</textarea>
+    <small>Opcional · Até 1.000 caracteres.</small>
+  </div>
+  <div class="form-actions"><a class="button button-secondary" href="{{ url_for('listar_registros') }}">Cancelar</a><button class="button button-primary" type="submit">{{ acao }} <span aria-hidden="true">→</span></button></div>
+</form>
+{% endblock %}
