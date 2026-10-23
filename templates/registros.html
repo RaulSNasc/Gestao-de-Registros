@@ -9,7 +9,7 @@
   {% if q or categoria_selecionada %}<a class="clear-link" href="{{ url_for('listar_registros') }}">Limpar</a>{% endif %}
 </form>
 <div class="table-card">
-  <div class="table-heading"><h2>Resultados</h2><span>{{ registros|length }} registro(s)</span></div>
+  <div class="table-heading"><h2>{% if q or categoria_selecionada %}Resultados da busca{% else %}Registros{% endif %}</h2><span>{% if registros|length == 1 %}1 registro encontrado{% else %}{{ registros|length }} registros encontrados{% endif %}</span></div>
   {% if registros %}
   <div class="table-scroll">
   <table>
@@ -28,7 +28,18 @@
   </table>
   </div>
   {% else %}
-  <div class="empty-state compact"><div class="empty-icon" aria-hidden="true">⌕</div><h3>Nenhum resultado encontrado</h3><p>Tente mudar os termos da busca ou cadastrar um novo registro.</p><a class="button button-primary" href="{{ url_for('novo_registro') }}">Cadastrar registro</a></div>
+  <div class="empty-state compact">
+    <div class="empty-icon" aria-hidden="true">⌕</div>
+    {% if q or categoria_selecionada %}
+    <h3>Nenhum resultado encontrado</h3>
+    <p>Tente ajustar os filtros ou limpar a busca para ver todos os registros.</p>
+    <a class="button button-secondary" href="{{ url_for('listar_registros') }}">Limpar filtros</a>
+    {% else %}
+    <h3>Nenhum registro cadastrado</h3>
+    <p>Cadastre o primeiro registro para começar a organizar as informações.</p>
+    <a class="button button-primary" href="{{ url_for('novo_registro') }}">Cadastrar primeiro registro</a>
+    {% endif %}
+  </div>
   {% endif %}
 </div>
 {% endblock %}
