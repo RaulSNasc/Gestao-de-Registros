@@ -15,13 +15,14 @@ app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
 CATEGORIAS = ["Doações", "Voluntariado", "Atividades", "Materiais", "Outros"]
 STATUS = ["Ativo", "Inativo"]
 
-
+# Funções auxiliares
 def conectar_banco():
     DATABASE.parent.mkdir(parents=True, exist_ok=True)
     conexao = sqlite3.connect(DATABASE)
     conexao.row_factory = sqlite3.Row
     return conexao
 
+# inicia o banco
 
 def inicializar_banco():
     with conectar_banco() as conexao:
@@ -39,6 +40,7 @@ def inicializar_banco():
 
 inicializar_banco()
 
+# Validação de campos do formulário
 
 def validar_campos(form):
     titulo = form.get("titulo", "").strip()
@@ -59,6 +61,7 @@ def validar_campos(form):
         erros.append("Selecione um status válido.")
     return {"titulo": titulo, "descricao": descricao, "categoria": categoria, "status": status}, erros
 
+# Rotas do Flask
 
 @app.get("/")
 def inicio():
@@ -70,6 +73,7 @@ def inicio():
         ).fetchall()
     return render_template("index.html", total=total, ativos=ativos, recentes=recentes)
 
+# Listagem de registros com filtros de busca e categoria
 
 @app.get("/registros")
 def listar_registros():
@@ -92,6 +96,7 @@ def listar_registros():
         categoria_selecionada=categoria, categorias=CATEGORIAS
     )
 
+# Cadastro, edição e exclusão de registros
 
 @app.route("/registros/novo", methods=["GET", "POST"])
 def novo_registro():
@@ -113,7 +118,7 @@ def novo_registro():
     return render_template("formulario.html", valores=valores, categorias=CATEGORIAS,
                            titulo_pagina="Novo registro", acao="Cadastrar")
 
-
+# Edição de registro existente
 @app.route("/registros/<int:registro_id>/editar", methods=["GET", "POST"])
 def editar_registro(registro_id):
     with conectar_banco() as conexao:
@@ -141,7 +146,7 @@ def editar_registro(registro_id):
     return render_template("formulario.html", valores=valores, categorias=CATEGORIAS,
                            titulo_pagina="Editar registro", acao="Salvar alterações")
 
-
+# Exclusão de registro
 @app.post("/registros/<int:registro_id>/excluir")
 def excluir_registro(registro_id):
     with conectar_banco() as conexao:
